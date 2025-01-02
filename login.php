@@ -3,6 +3,7 @@
     require_once __DIR__. "/lib/pdo.php";
     require_once __DIR__. "/lib/user.php";
 
+
     $errors = [];
 
     if (isset($_POST['loginUser'])) {
@@ -10,10 +11,13 @@
 
         if ($user) {
             // on va le connecter => session
+            $_SESSION['user'] = $user;
+            header('location: index.php');
         } else {
             // afficher une erreur
             $errors[] = "Email ou mot de passe incorrect";
         }
+        var_dump($_SESSION);
     }
 
 ?>
