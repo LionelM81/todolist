@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 01 jan. 2025 à 19:32
+-- Généré le : ven. 03 jan. 2025 à 10:43
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `category` (
 --
 
 INSERT INTO `category` (`id`, `name`, `icon`) VALUES
-(1, 'Voyage', 'Travel'),
-(2, 'Travail', 'Work');
+(1, 'Voyage', 'bi-suitcase-lg-fill'),
+(2, 'Travail', 'bi-person-workspace');
 
 -- --------------------------------------------------------
 
@@ -82,14 +82,16 @@ CREATE TABLE IF NOT EXISTS `list` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `list`
 --
 
 INSERT INTO `list` (`id`, `title`, `user_id`, `category_id`) VALUES
-(1, 'Voyage en Italie', 1, 1);
+(1, 'Voyage en Italie', 1, 1),
+(2, 'Voyage à Rome', 1, 1),
+(3, 'Projet Php CheckIT', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -111,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `nickname`, `email`, `password`) VALUES
-(1, 'test', 'test@test.com', 'test');
+(1, 'test', 'test@test.com', '$2y$10$Noacj37kwosCCDdRhGYESOnP/KHyG8Mkt3y2WUhrL0LFRQYynrYK2');
 
 --
 -- Contraintes pour les tables déchargées
