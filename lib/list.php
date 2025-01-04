@@ -1,5 +1,7 @@
 <?php
 
+
+
 function getListsByUserId(PDO $pdo, int $userId):array
 {
     $query = $pdo->prepare("SELECT list.*, category.name as category_name, 
@@ -24,20 +26,18 @@ function getListById(PDO $pdo, int $id):array|bool
 }
 
 
-
-
 function saveList(PDO $pdo, string $title, int $userId, int $categoryId, int $id=null):int|bool
 {
     if ($id) {
         // UPDATE
-        $query = $pdo->prepare("UPDATE list SET title = : title, category_id = :category_id,
+        $query = $pdo->prepare("UPDATE list SET title = :title, category_id = :category_id,
                                                         user_id = :user_id
                                 WHERE id = :id");
         $query->bindValue(':id', $id, PDO::PARAM_INT);
     } else {
         // INSERT
         $query = $pdo->prepare("INSERT INTO list (title, category_id, user_id)
-                                VALUES (:title, :category_id, : user_id");
+                                VALUES (:title, :category_id, :user_id)");
     }
     $query->bindValue(':title', $title, PDO::PARAM_STR);
     $query->bindValue(':category_id', $categoryId, PDO::PARAM_INT);
@@ -53,22 +53,20 @@ function saveList(PDO $pdo, string $title, int $userId, int $categoryId, int $id
     } else {
         return false;
     }
-
-
 }
 
 function saveListItem(PDO $pdo, string $name, int $listId, bool $status = false, int $id=null):int|bool
 {
     if ($id) {
         // UPDATE
-        $query = $pdo->prepare("UPDATE item SET name = : name, list_id = :list_id,
+        $query = $pdo->prepare("UPDATE item SET name = :name, list_id = :list_id,
                                                         status = :status
                                 WHERE id = :id");
         $query->bindValue(':id', $id, PDO::PARAM_INT);
     } else {
         // INSERT
         $query = $pdo->prepare("INSERT INTO item (name, list_id, status)
-                                VALUES (:name, :category_id, : status)");
+                                VALUES (:name, :list_id, :status)");
     }
     $query->bindValue(':name', $name, PDO::PARAM_STR);
     $query->bindValue(':list_id', $listId, PDO::PARAM_INT);
