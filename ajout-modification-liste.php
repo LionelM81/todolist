@@ -57,6 +57,8 @@ $editMode = false;
 if (isset($_GET['id'])) {
     $list = getListById($pdo, (int)$_GET['id']);
     $editMode = true;
+
+    $items = getListItems($pdo, (int)$_GET['id']);
 }
 
 ?>
@@ -75,15 +77,15 @@ if (isset($_GET['id'])) {
         </div>
     <?php } ?>
 
-<div class="accordion" id="accordionExample">
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-            <button class="accordion-button <?=($editMode) ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="<?=($editMode) ? 'false' : 'true' ?>" aria-controls="collapseOne">
-                <?=($editMode) ? $list['title'] : 'Ajouter une liste' ?>
-            </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse <?=($editMode) ? '' : 'show' ?>" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button <?=($editMode) ? 'collapsed' : '' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="<?=($editMode) ? 'false' : 'true' ?>" aria-controls="collapseOne">
+                    <?=($editMode) ? $list['title'] : 'Ajouter une liste' ?>
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse <?=($editMode) ? '' : 'show' ?>" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
                 <form action="" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">Titre</label>
@@ -104,6 +106,7 @@ if (isset($_GET['id'])) {
                 </div>
 
                 </form>
+                </div>
             </div>
         </div>
     </div>
@@ -120,14 +123,48 @@ if (isset($_GET['id'])) {
             <?=$error; ?>
         </div>
     <?php } ?>
+    </div>
             <form method="post" class="d-flex">
                 <input type="checkbox" name="status" id="status">
                 <input type="text" name="name" id="name" placeholder="Ajouter un item" class="form-control mx-2">
                 <input type="submit" name="saveItem" class="btn btn-primary" value="Enregistrer">
             </form>
-        <?php } ?>
+    <div class="row m-4 border rounded p-2">
+        <?php foreach($items as $item) { ?>
+            <div class="accordion mb-2">
+                <div class="accordion-item" id="accordion-parent-<?=$item['id'] ?>">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-<?=$item['id']?>" aria-expanded="false" aria-controls="collapseOne">
+                            <?= $list['title'] ?>
+                        </button>
+                    </h2>
+                    <div id="collapse-item-<?=$item['id']?>" class="accordion-collapse collapse" data-bs-parent="#accordion-parent-<?=$item['id']?>">
+                        <div class="accordion-body">
+                            <form action="" method="post">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Titre</label>
+                                    <input type="text" value="<?=$list['title'];?>" name="title" id="title" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="category_id" class="form-label">Catégorie</label>
+                                    <select name="category_id" id="category_id" class="form-control">
+                                        <?php foreach ($categories as $category) { ?>
+                                            <option <?=($category['id'] === $list['category_id']) ? 'selected="selected"' : '' ?> value="<?=$category['id'] ?>"><?=$category['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="submit" value="Enregistrer" name="saveList" class="btn btn-primary">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
-    
+            <?php } ?>
+        <?php } ?>
+        
 </div>
 
 
