@@ -1,19 +1,26 @@
 <?php
 
-
-
-function getListsByUserId(PDO $pdo, int $userId):array
+function getListsByUserId(PDO $pdo, int $userId, int $categoryId=null):array
 {
-    $query = $pdo->prepare("SELECT list.*, category.name as category_name, 
-                            category.icon as category_icon FROM list
-                            JOIN category ON category.id = list.category_id;
-                            WHERE user_id = :user_id");
+    $sql = "SELECT list.*, category.name as category_name, 
+    category.icon as category_icon 
+    FROM list
+    JOIN category ON category.id = list.category_id 
+    WHERE user_id = :user_id";
+
+    if ($categoryId) {
+        $sql .= " AND list.category_id = :category_id";
+    }
+
+    $query = $pdo->prepare($sql);
     $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
+    if ($categoryId) {
+        $query->bindValue(':category_id', $categoryId, PDO::PARAM_INT);
+    }
     $query->execute();
     $lists = $query->fetchAll(PDO::FETCH_ASSOC);
 
     return $lists;
-
 }
 
 function getListById(PDO $pdo, int $id):array|bool
@@ -83,4 +90,21 @@ function getListItems(PDO $pdo, int $id):array
     $query->execute();
 
     return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function deleteListItemById(PDO $pdo, int $id):bool
+{
+    $query = $pdo->prepare('DELETE FROM item WHERE id = :id');
+    $query->bindValue(':id', $id, PDO::PARAM_INT);
+    
+    return $query->execute();
+}
+
+function updateListItemStatus(PDO $pdo, int $id, bool $status):bool
+{
+    $query = $pdo->prepare('UPDATE item SET status = :status WHERE id = :id ');
+    $query->bindValue(':id', $id, PDO::PARAM_INT);
+    $query->bindValue(':status', $status, PDO::PARAM_BOOL);
+
+    return $query->execute();
 }

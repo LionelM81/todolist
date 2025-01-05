@@ -4,5 +4,4 @@
     <h1>A propos</h1>
 </div>
 
-
 <?php require_once __DIR__. "/templates/footer.php" ?>
